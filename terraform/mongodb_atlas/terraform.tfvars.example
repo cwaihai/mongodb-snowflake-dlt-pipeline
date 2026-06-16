@@ -1,0 +1,10 @@
+# Copy this file to terraform.tfvars and fill in your values.
+# Never commit terraform.tfvars to git — it is in .gitignore.
+
+atlas_public_key  = "xxxxxxxxxxxx"        # Atlas UI > Access Manager > API Keys
+atlas_private_key = "xxxxxxxx-xxxx-xxxx"  # Atlas UI > Access Manager > API Keys
+atlas_project_id  = "64a1b2c3d4e5f6a7b8c9d0e1"  # Atlas UI > Project Settings > Project ID
+cluster_name      = "Cluster0"
+db_username       = "dlt_pipeline_user"
+db_password       = "ChangeMe123!"
+allowed_ip        = "203.0.113.42"        # run: curl ifconfig.me

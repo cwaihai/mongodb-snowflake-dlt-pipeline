@@ -1,0 +1,11 @@
+# Copy to terraform.tfvars — never commit to git.
+
+# Find your account ID in Snowflake UI > bottom-left account menu > "Copy account identifier"
+# Format is usually: orgname-accountname  (e.g. myorg-ab12345)
+snowflake_account        = "myorg-ab12345"
+
+snowflake_admin_user     = "ACCOUNTADMIN_USER"
+snowflake_admin_password = "YourAdminPassword!"
+
+dlt_sf_username = "DLT_USER"
+dlt_sf_password = "DltPipelinePass123!"

@@ -1,0 +1,6 @@
+[runtime]
+log_level = "INFO"
+
+[normalize]
+# Write batches of 50_000 rows to keep memory usage low on free tiers
+loader_file_format = "jsonl"
