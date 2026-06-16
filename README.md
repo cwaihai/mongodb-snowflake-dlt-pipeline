@@ -30,7 +30,7 @@ Open Dataset (Parquet / JSON.GZ)
 ## Repository structure
 
 ```
-data-ingestion-iac/
+mongodb-snowflake-dlt-pipeline/
 ├── terraform/
 │   ├── mongodb_atlas/          # DB user + IP access for your existing M0 cluster
 │   └── snowflake/              # Database, schemas, warehouse, role, service user
@@ -73,7 +73,7 @@ brew tap hashicorp/tap && brew install hashicorp/tap/terraform
 
 ```bash
 git clone <your-repo-url>
-cd data-ingestion-iac
+cd mongodb-snowflake-dlt-pipeline
 
 python -m venv .venv
 source .venv/bin/activate          # Windows: .venv\Scripts\activate
