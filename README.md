@@ -62,6 +62,13 @@ data-ingestion-iac/
 
 ## Step-by-step guide
 
+### Prerequisites
+```bash
+# Mac
+brew install python@3.11
+brew tap hashicorp/tap && brew install hashicorp/tap/terraform
+```
+
 ### Step 1 — Clone and set up Python
 
 ```bash
