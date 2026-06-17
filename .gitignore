@@ -1,0 +1,31 @@
+# Secrets — never commit these
+terraform/**/*.tfvars
+pipelines/.dlt/secrets.toml
+
+# Terraform state
+**/.terraform/
+*.tfstate
+*.tfstate.backup
+*.tfstate.lock.info
+.terraform.lock.hcl
+
+# Downloaded datasets (large files)
+pipelines/01_load_to_mongodb/*.parquet
+pipelines/01_load_to_mongodb/gh_archive_data/
+*.parquet
+*.json.gz
+
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+*.egg-info/
+dist/
+
+# dlt pipeline state
+pipelines/**/.dlt/pipelines/
+
+# OS
+.DS_Store
+Thumbs.db
