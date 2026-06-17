@@ -54,10 +54,13 @@ mongodb-snowflake-dlt-pipeline/
 
 - Python 3.11+
 - [Terraform CLI](https://developer.hashicorp.com/terraform/install) >= 1.5
-- A MongoDB Atlas account with an existing **free M0 cluster** (you said you have one)
-- A Snowflake free trial account
+- A MongoDB Atlas account with an existing **free M0 cluster** + a user with Project Owner Role
+- A Snowflake free trial account + a user with ACCOUNTADMIN role
 - Git
 
+### References
+https://www.mongodb.com/docs/atlas/reference/user-roles/
+https://docs.snowflake.com/en/sql-reference/commands-user-role
 ---
 
 ## Step-by-step guide
@@ -78,7 +81,7 @@ cd mongodb-snowflake-dlt-pipeline
 python -m venv .venv
 source .venv/bin/activate          # Windows: .venv\Scripts\activate
 
-pip install -r requirements.txt
+uv pip install -r requirements.txt
 ```
 
 ---
@@ -86,12 +89,12 @@ pip install -r requirements.txt
 ### Step 2 — Get your MongoDB Atlas API keys
 
 1. Log in to [cloud.mongodb.com](https://cloud.mongodb.com)
-2. Click your organisation name (top-left) → **Access Manager** → **API Keys**
+2. Click your organisation name (top-left) → Click on your Project (ex: Project 0) -> **Project Identity & Access** → **Applications** -> **Tab API Keys**
 3. Click **Create API Key**
    - Description: `terraform-dlt`
    - Permission: **Project Owner**
 4. Copy the **Public Key** and **Private Key** — you won't see the private key again
-5. On the next screen, add your current IP to the API key access list
+5. Add your current IP to the API key access list
 
 Also note your **Project ID**:
 - Atlas UI → your project → **Project Settings** → copy **Project ID**
@@ -132,6 +135,24 @@ Save this — you'll need it in Step 6.
 2. Click the account menu (bottom-left corner)
 3. Hover your account → click **Copy account identifier**
    - Format: `orgname-accountname` (e.g. `myorg-ab12345`)
+4. Best Practice Create a new user "CICD_DEPLOYER" with ACCOUNTADMIN. We will activate programmatic access for this user with key-pair authentication.
+6. Generate a key pair (run once):
+  # Unencrypted key (simpler, fine for local dev)
+  openssl genrsa 2048 | openssl pkcs8 -topk8 -inform
+  PEM -out ~/.ssh/snowflake_rsa_key.p8 -nocrypt
+  openssl rsa -in ~/.ssh/snowflake_rsa_key.p8
+  -pubout -out ~/.ssh/snowflake_rsa_key.pub
+  chmod 600 ~/.ssh/snowflake_rsa_key.p8
+
+7. Register the public key on your Snowflake user:
+  -- Run this in a Snowflake worksheet as
+  ACCOUNTADMIN or SECURITYADMIN
+  -- Paste the content of
+  ~/.ssh/snowflake_rsa_key.pub, WITHOUT the
+  -----BEGIN/END----- header/footer lines
+  ALTER USER CICD_DEPLOYER SET RSA_PUBLIC_KEY='<paste
+  public key body here>';
+
 
 ---
 
@@ -143,6 +164,9 @@ cd ../../terraform/snowflake
 cp terraform.tfvars.example terraform.tfvars
 # Edit terraform.tfvars — fill in snowflake_account, your admin credentials,
 # and choose a password for the new dlt service user
+# snowflake_admin_private_key_path       =
+  "~/.ssh/snowflake_rsa_key.p8"
+  snowflake_admin_private_key_passphrase = ""
 
 terraform init
 terraform plan
