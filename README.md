@@ -136,23 +136,24 @@ Save this — you'll need it in Step 6.
 3. Hover your account → click **Copy account identifier**
    - Format: `orgname-accountname` (e.g. `myorg-ab12345`)
 4. Best Practice Create a new user "CICD_DEPLOYER" with ACCOUNTADMIN. We will activate programmatic access for this user with key-pair authentication.
-6. Generate a key pair (run once):
-  # Unencrypted key (simpler, fine for local dev)
-  openssl genrsa 2048 | openssl pkcs8 -topk8 -inform
-  PEM -out ~/.ssh/snowflake_rsa_key.p8 -nocrypt
-  openssl rsa -in ~/.ssh/snowflake_rsa_key.p8
-  -pubout -out ~/.ssh/snowflake_rsa_key.pub
+  ```
+  CREATE USER IF NOT EXISTS CICD_DEPLOYER;
+GRANT ROLE ACCOUNTADMIN TO USER CICD_DEPLOYER;
+  ```
+5. Generate a key pair (run once):
+  Unencrypted key (simpler, fine for local dev)
+  ```
+  openssl genrsa 2048 | openssl pkcs8 -topk8 -inform PEM -out ~/.ssh/snowflake_rsa_key.p8 -nocrypt
+  openssl rsa -in ~/.ssh/snowflake_rsa_key.p8 -pubout -out ~/.ssh/snowflake_rsa_key.pub 
   chmod 600 ~/.ssh/snowflake_rsa_key.p8
-
-7. Register the public key on your Snowflake user:
-  -- Run this in a Snowflake worksheet as
-  ACCOUNTADMIN or SECURITYADMIN
-  -- Paste the content of
-  ~/.ssh/snowflake_rsa_key.pub, WITHOUT the
-  -----BEGIN/END----- header/footer lines
+  ```
+6. Register the public key on your Snowflake user:
+  ```
+  -- Run this in a Snowflake worksheet as ACCOUNTADMIN or SECURITYADMIN
+  -- Paste the content of ~/.ssh/snowflake_rsa_key.pub, WITHOUT the -----BEGIN/END----- header/footer lines
   ALTER USER CICD_DEPLOYER SET RSA_PUBLIC_KEY='<paste
   public key body here>';
-
+  ```
 
 ---
 
